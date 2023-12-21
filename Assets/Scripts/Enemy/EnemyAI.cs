@@ -24,8 +24,7 @@ public class EnemyAI : MonoBehaviour
         if (hp <= 0) 
         {
             agent.isStopped = true;
-            manager.playerScore += 25;
-            manager.scorePlayerText.text = manager.playerScore.ToString();
+            StaticVal.moneyForBattle += 70;
             Destroy(gameObject);
         }
         if (hp < 100) onPlayer = true;

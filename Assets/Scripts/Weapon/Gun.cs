@@ -27,16 +27,16 @@ public class Gun
         this.currentAmmos = currentAmmos;
     }
 
-    public bool Shot(float _damage, GameObject _ray, LayerMask _mask, string _tag, bool _enemy)
+    public bool Shot(float _damage, GameObject _pointStartRaycast, LayerMask _maskRaycast, string _tag, bool _enemy)
     {
         currentAmmos--;
-        RaycastHit[] hitInfo = Physics.RaycastAll(_ray.transform.position, _ray.transform.forward, 750f, _mask);
+        RaycastHit[] hitInfo = Physics.RaycastAll(_pointStartRaycast.transform.position, _pointStartRaycast.transform.forward, 750f, _maskRaycast);
         if (hitInfo.Length != 0)
         {
             if (hitInfo[0].collider.CompareTag(_tag))
             {
                 if (_enemy) hitInfo[0].collider.GetComponent<EnemyAI>().TakeDamage(_damage);
-                else hitInfo[0].collider.GetComponent<PlayerController>().TakeDamage(_damage);
+                else hitInfo[0].collider.GetComponent<Player>().TakeDamage(_damage);
                 return true;
             }
         }

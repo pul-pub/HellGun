@@ -6,11 +6,14 @@ public static class StaticVal
     public static string language = "ru";
     public static bool onAd = false;
     public static float volMusic = 100f;
-    public static float sens = 550f;
+    public static float sens = 800f;
     public static int money = 0;
 
     //GAME
     public static int ammo = 200;
+    public static int kills = 0;
+    public static int scoreWithPoint = 0;
+    public static int moneyForBattle = 0;
     public static int levlEnemy = 0;
 
     public static int[] inv = { 0, -1 };

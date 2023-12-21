@@ -3,17 +3,7 @@ guid: b09bd994c705b5e4ead7eec14c428a22
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: kURTKA
-    second: {fileID: 2100000, guid: 302a1b45f6ea0124f8ccf677ef1b1cdd, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: pERCHATKI
-    second: {fileID: 2100000, guid: a6e702a4d98e2af4080d4d0ac63338a8, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -46,7 +36,7 @@ ModelImporter:
   meshes:
     lODScreenPercentages: []
     globalScale: 1
-    meshCompression: 0
+    meshCompression: 2
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1

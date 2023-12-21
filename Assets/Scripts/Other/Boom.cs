@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Boom : MonoBehaviour
 {
-    void Update()
+    void Start()
     {
         Invoke("Del", 3f);
     }
