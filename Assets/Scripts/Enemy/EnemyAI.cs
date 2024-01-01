@@ -1,55 +1,113 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour 
 {
-    public Transform player;
-    public Transform point;
-    public GameManager manager;
+    [SerializeField] private NavMeshAgent agent;
 
-    private NavMeshAgent agent;
-    private Animator anim;
+    [SerializeField] private Transform player;
 
-    private float hp = 100;
-    public bool onPlayer = false;
+    [SerializeField] private LayerMask whatIsGround, whatIsPlayer;
+
+    [SerializeField] private float health = 100;
+
+    //Patroling
+    [SerializeField] private Vector3 walkPoint;
+    [SerializeField] private bool walkPointSet;
+    [SerializeField] private float walkPointRange;
+
+    //Attacking
+    [SerializeField] private float timeBetweenAttacks;
+    [SerializeField] private bool alreadyAttacked;
+    [SerializeField] private GameObject projectile;
+
+    //States
+    [SerializeField] private float sightRange, attackRange;
+    [SerializeField] private bool playerInSightRange, playerInAttackRange;
 
     private void Awake()
     {
-        anim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
     }
 
     private void Update()
     {
-        if (hp <= 0) 
-        {
-            agent.isStopped = true;
-            StaticVal.moneyForBattle += 70;
-            Destroy(gameObject);
-        }
-        if (hp < 100) onPlayer = true;
+        //Check for sight and attack range
+        playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
+        playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
-        if (!onPlayer) AttackingPoint(3.9f);
-        else AttackingPlayer(StaticVal.speedEnemy[StaticVal.levlEnemy]);
-
-        if (agent.velocity != Vector3.zero) anim.SetBool("isRun", true);
-        else anim.SetBool("isRun", false);
+        if (!playerInSightRange && !playerInAttackRange) Patroling();
+        if (playerInSightRange && !playerInAttackRange) ChasePlayer();
+        if (playerInAttackRange && playerInSightRange) AttackPlayer();
     }
 
-    private void AttackingPoint(float _speed = 1f)
+    private void Patroling()
     {
-        agent.speed = _speed;
-        agent.destination = point.position;
+        if (!walkPointSet) SearchWalkPoint();
+
+        if (walkPointSet)
+            agent.SetDestination(walkPoint);
+
+        Vector3 distanceToWalkPoint = transform.position - walkPoint;
+
+        //Walkpoint reached
+        if (distanceToWalkPoint.magnitude < 1f)
+            walkPointSet = false;
+    }
+    private void SearchWalkPoint()
+    {
+        //Calculate random point in range
+        float randomZ = Random.Range(-walkPointRange, walkPointRange);
+        float randomX = Random.Range(-walkPointRange, walkPointRange);
+
+        walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
+
+        if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
+            walkPointSet = true;
     }
 
-    private void AttackingPlayer(float _speed = 1f)
+    private void ChasePlayer()
     {
-        agent.speed = _speed;
         agent.SetDestination(player.position);
     }
 
-    public void TakeDamage(float dm)
+    private void AttackPlayer()
     {
-        hp -= dm;
+        //Make sure enemy doesn't move
+        agent.SetDestination(transform.position);
+
+        transform.LookAt(player);
+
+        if (!alreadyAttacked)
+        {
+            ///Attack code here
+            Rigidbody rb = Instantiate(projectile, transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+            rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
+            rb.AddForce(transform.up * 8f, ForceMode.Impulse);
+            ///End of attack code
+
+            alreadyAttacked = true;
+            Invoke(nameof(ResetAttack), timeBetweenAttacks);
+        }
+    }
+    private void ResetAttack()
+    {
+        alreadyAttacked = false;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+
+        if (health <= 0) Destroy(gameObject);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, sightRange);
     }
 }

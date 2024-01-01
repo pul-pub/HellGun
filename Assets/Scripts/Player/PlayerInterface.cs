@@ -175,10 +175,18 @@ public class PlayerInterface : MonoBehaviour
 
     public void UpdateTextAmmos()
     {
-        textAmmosInInventory.text = StaticVal.ammo.ToString();
-        textAmmos.text = StaticVal.gun[StaticVal.inv[_player.NumberWeapon - 1]].currentAmmos.ToString();
-        if (StaticVal.gun[StaticVal.inv[_player.NumberWeapon - 1]].currentAmmos == 0) textAmmos.color = Color.red;
-        else textAmmos.color = Color.white;
+        if (StaticVal.inv[_player.NumberWeapon - 1] >= 0)
+        {
+            textAmmosInInventory.text = StaticVal.ammo.ToString();
+            textAmmos.text = StaticVal.gun[StaticVal.inv[_player.NumberWeapon - 1]].currentAmmos.ToString();
+            if (StaticVal.gun[StaticVal.inv[_player.NumberWeapon - 1]].currentAmmos == 0) textAmmos.color = Color.red;
+            else textAmmos.color = Color.white;
+        }
+        else
+        {
+            textAmmosInInventory.text = "--";
+            textAmmos.text = "--";
+        }
     }
 
     public void Exit()

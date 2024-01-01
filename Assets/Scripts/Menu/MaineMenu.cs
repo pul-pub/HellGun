@@ -72,7 +72,8 @@ public class MaineMenu : MonoBehaviour
 
     public void Play()
     {
-        Adv.ShowAdv();
+        //Adv.ShowAdv();
+        //Adv.ShowAdv();
         StaticVal.ammo = 200;
         StaticVal.levlEnemy = 0;
         for (int i = 0; i < StaticVal.gun.Length; i++)

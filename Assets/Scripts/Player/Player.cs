@@ -8,7 +8,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float speedRun;
     [Header("Weapon")]
     [SerializeField] private GameObject[] pullWeapons;
+    [SerializeField] private GameObject store;
     [SerializeField] private GameObject pointStartRaycast;
+    [SerializeField] private Transform parent;
+    [SerializeField] private Object bullet;
     [Header("Body")]
     [SerializeField] private GameObject hands;
     [Header("Audio")]
@@ -70,18 +73,12 @@ public class Player : MonoBehaviour
                 StaticVal.inv[_numGun - 1] >= 0 && StaticVal.gun[StaticVal.inv[_numGun - 1]].currentAmmos >= 1 && !_playerInterface._isPause &&
                 !_playerInterface._isWinOrFail)
             {
-                if (_onAim)
-                {
-                    _anim.SetTrigger("isShotOn");
-                }
-                else
-                {
-                    _anim.SetTrigger("isShot");
-                }
-                if (StaticVal.gun[StaticVal.inv[_numGun - 1]].Shot(Random.Range(7, 14), pointStartRaycast, LayerMask.GetMask("Ray"), "Enemy", true))
+                if (StaticVal.gun[StaticVal.inv[_numGun - 1]].Shoot(bullet, parent, Random.Range(7, 14), pointStartRaycast, LayerMask.GetMask("Enemy"),
+                    "Enemy", true))
                 {
                     _playerInterface.Hiting();
                 }
+                
                 _cameraContoller.Recoil(StaticVal.gun[StaticVal.inv[_numGun - 1]].angelVertical);
                 _audioSource.clip = shootClip;
                 _audioSource.Play();
@@ -98,6 +95,7 @@ public class Player : MonoBehaviour
             !_playerInterface._isPause && !_playerInterface._isWinOrFail)
         {
             _isReload = true;
+            _anim.SetTrigger("Reload");
             _audioSource.clip = reloadClip;
             _audioSource.Play();
             StartCoroutine(Reload());
@@ -142,18 +140,22 @@ public class Player : MonoBehaviour
             {
                 _numGun = 1;
                 _flagGun = true;
+                _anim.SetBool("noGun", false);
             }
             else if (_numGun == 1 && _flagGun == true)
             {
                 _flagGun = false;
+                _anim.SetBool("noGun", true);
             }
             else if (_numGun == 1 && _flagGun == false)
             {
                 _flagGun = true;
+                _anim.SetBool("noGun", false);
             }
             if (StaticVal.inv[0] < 0)
             {
                 _flagGun = false;
+                _anim.SetBool("noGun", true);
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -162,18 +164,22 @@ public class Player : MonoBehaviour
             {
                 _numGun = 2;
                 _flagGun = true;
+                _anim.SetBool("noGun", false);
             }
             else if (_numGun == 2 && _flagGun == true)
             {
                 _flagGun = false;
+                _anim.SetBool("noGun", true);
             }
             else if (_numGun == 2 && _flagGun == false)
             {
                 _flagGun = true;
+                _anim.SetBool("noGun", false);
             }
             if (StaticVal.inv[1] < 0)
             {
                 _flagGun = false;
+                _anim.SetBool("noGun", true);
             }
         }
     }
@@ -184,8 +190,7 @@ public class Player : MonoBehaviour
         {
             if (_onAim && !StaticVal.gun[StaticVal.inv[_numGun - 1]].opticalPricel)
             {
-                _anim.SetBool("onGunOn", true);
-                _anim.SetBool("onGun", false);
+                hands.transform.localPosition = StaticVal.gun[StaticVal.inv[_numGun - 1]].posHendsOnAim;
                 hands.SetActive(true);
                 _playerInterface.SetAim(false);
                 _camera.fieldOfView = 60f;
@@ -200,8 +205,7 @@ public class Player : MonoBehaviour
             }
             else
             {
-                _anim.SetBool("onGunOn", false);
-                _anim.SetBool("onGun", true);
+                hands.transform.localPosition = new Vector3(-0.2f, -1, 0);
                 hands.SetActive(true);
                 _playerInterface.SetAim(true);
                 _camera.fieldOfView = 60f;
@@ -210,8 +214,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            _anim.SetBool("onGunOn", false);
-            _anim.SetBool("onGun", false);
+            hands.transform.localPosition = new Vector3(-0.2f, -1, 0);
             hands.SetActive(true);
             _playerInterface.SetAim(true, false);
             _camera.fieldOfView = 60f;
@@ -229,6 +232,15 @@ public class Player : MonoBehaviour
 
     private void ClosePullGun(int _idGun)
     {
+        if (_idGun == 100)
+        {
+            store.SetActive(false);
+        }
+        else
+        {
+            store.SetActive(true);
+        }
+
         for (int i = 0; i < pullWeapons.Length; i++)
         {
             if (i == _idGun)
@@ -255,5 +267,11 @@ public class Player : MonoBehaviour
     public int NumberWeapon
     {
         get { return _numGun; }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(pointStartRaycast.transform.position, -pointStartRaycast.transform.right.normalized * 700);
     }
 }
