@@ -3,7 +3,12 @@ guid: 7b459053396f5e941a1364ab09af84b4
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pERCHATKI
+    second: {fileID: 2100000, guid: a6e702a4d98e2af4080d4d0ac63338a8, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

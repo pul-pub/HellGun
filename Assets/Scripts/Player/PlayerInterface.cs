@@ -15,6 +15,9 @@ public class PlayerInterface : MonoBehaviour
     [SerializeField] private Image imgPoint;
     [SerializeField] private Point point;
     [SerializeField] private Slider progressBarHealth;
+    [Header("Enemy and Icon")]
+    [SerializeField] private RectTransform[] iconEnemy;
+    [SerializeField] private Transform[] enemyTransform;
     [Header("Weapons/Ammos for it")]
     [SerializeField] private TextMeshProUGUI textAmmosInInventory;
     [SerializeField] private TextMeshProUGUI textAmmos;
@@ -24,6 +27,7 @@ public class PlayerInterface : MonoBehaviour
     [SerializeField] private TextMeshProUGUI textForWinOrFail;
     [SerializeField] private TextMeshProUGUI textScores;
 
+    private Camera _cam;
     private Player _player;
     private bool _isHit = false;
     private float timer = 1f;
@@ -32,6 +36,7 @@ public class PlayerInterface : MonoBehaviour
 
     private void Awake()
     {
+        _cam = Camera.main;
         _player = GetComponent<Player>();
         _isHit = false;
         _isPause = false;
@@ -40,6 +45,7 @@ public class PlayerInterface : MonoBehaviour
 
     void Update()
     {
+        SetPositionIcon();
         UpdateTextAmmos();
         progressBarHealth.value = _player.Health;
 
@@ -86,6 +92,30 @@ public class PlayerInterface : MonoBehaviour
         if (StaticVal.scoreWithPoint == 10)
         {
             WinGame();
+        }
+    }
+
+    private void SetPositionIcon()
+    {
+        for (int i = 0; i < iconEnemy.Length; i++)
+        {
+            if (enemyTransform[i] == null)
+            {
+                iconEnemy[i].gameObject.SetActive(false);
+            }
+            else
+            {
+                iconEnemy[i].position = _cam.WorldToScreenPoint(enemyTransform[i].position);
+
+                if (iconEnemy[i].localPosition.z < 0)
+                {
+                    iconEnemy[i].gameObject.SetActive(false);
+                }
+                else
+                {
+                    iconEnemy[i].gameObject.SetActive(true);
+                }
+            }
         }
     }
 

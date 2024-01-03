@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -6,7 +7,12 @@ public class EnemyAI : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent agent;
 
+    [SerializeField] private GameObject pointStartRaycast;
+    [SerializeField] private Transform parent;
+    [SerializeField] private Object bullet;
     [SerializeField] private Transform player;
+    [SerializeField] private Transform body;
+    [SerializeField] private Transform hand;
 
     [SerializeField] private LayerMask whatIsGround, whatIsPlayer;
 
@@ -18,17 +24,25 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float walkPointRange;
 
     //Attacking
-    [SerializeField] private float timeBetweenAttacks;
-    [SerializeField] private bool alreadyAttacked;
     [SerializeField] private GameObject projectile;
 
     //States
     [SerializeField] private float sightRange, attackRange;
     [SerializeField] private bool playerInSightRange, playerInAttackRange;
 
+    private Animator _anim;
+    private AudioSource _audioSource;
+    private Gun _gun;
+    private float _timeBtwShot = 0f;
+    private bool isRelod = false;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        _anim = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
+
+        _gun = new Gun("AKM", 0, 0.5f, 10, 0.15f, false, 1f, 10, new Vector3(-0.54f, -0.8f, 0));
     }
 
     private void Update()
@@ -40,10 +54,17 @@ public class EnemyAI : MonoBehaviour
         if (!playerInSightRange && !playerInAttackRange) Patroling();
         if (playerInSightRange && !playerInAttackRange) ChasePlayer();
         if (playerInAttackRange && playerInSightRange) AttackPlayer();
+
+        if (!agent.isStopped)
+        {
+            _anim.SetBool("isRun", true);
+        }
     }
 
     private void Patroling()
     {
+        agent.isStopped = false;
+
         if (!walkPointSet) SearchWalkPoint();
 
         if (walkPointSet)
@@ -69,31 +90,38 @@ public class EnemyAI : MonoBehaviour
 
     private void ChasePlayer()
     {
+        agent.isStopped = false;
+
         agent.SetDestination(player.position);
     }
 
     private void AttackPlayer()
     {
         //Make sure enemy doesn't move
-        agent.SetDestination(transform.position);
+        agent.isStopped = true;
 
-        transform.LookAt(player);
+        body.transform.LookAt(player.position - new Vector3(2, 2, 0));
 
-        if (!alreadyAttacked)
+
+        if (_timeBtwShot <= 0)
         {
-            ///Attack code here
-            Rigidbody rb = Instantiate(projectile, transform.position, Quaternion.identity).GetComponent<Rigidbody>();
-            rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
-            rb.AddForce(transform.up * 8f, ForceMode.Impulse);
-            ///End of attack code
+            if (_gun.currentAmmos >= 1 && !isRelod)
+            {
+                _gun.Shoot(bullet, parent, _gun.dm, pointStartRaycast, LayerMask.GetMask("Player"), "Plyer", false);
 
-            alreadyAttacked = true;
-            Invoke(nameof(ResetAttack), timeBetweenAttacks);
+                //_audioSource.Play();
+                _timeBtwShot = _gun.startTimeBtwShot;
+            }
+            else
+            {
+                isRelod = true;
+                Invoke("Reload", 2f);
+            }
         }
-    }
-    private void ResetAttack()
-    {
-        alreadyAttacked = false;
+        else if (_timeBtwShot > 0)
+        {
+            _timeBtwShot -= Time.deltaTime;
+        }
     }
 
     public void TakeDamage(float damage)
@@ -101,6 +129,12 @@ public class EnemyAI : MonoBehaviour
         health -= damage;
 
         if (health <= 0) Destroy(gameObject);
+    }
+
+    private void Reload()
+    {
+        _gun.Reload(100);
+        isRelod = false;
     }
 
     private void OnDrawGizmosSelected()

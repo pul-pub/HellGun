@@ -33,13 +33,15 @@ public class Gun
     {
         currentAmmos--;
         RaycastHit[] hitInfo = Physics.RaycastAll(_pointStartRaycast.transform.position, -_pointStartRaycast.transform.right, 750f, _maskRaycast);
+        RaycastHit[] hitWithBullet = Physics.RaycastAll(_pointStartRaycast.transform.position, -_pointStartRaycast.transform.right, 750f);
+        GameObject obj = UnityEngine.Object.Instantiate(bullet, _pointStartRaycast.transform.position, _pointStartRaycast.transform.rotation, parent) as GameObject;
+        obj.GetComponent<Bullet>().damage = _damage;
+        if (hitWithBullet.Length > 0) obj.GetComponent<Bullet>().point = hitWithBullet[0].point;
+        else obj.GetComponent<Bullet>().point = -_pointStartRaycast.transform.right.normalized * 700;
         if (hitInfo.Length != 0)
         {
             if (_enemy) hitInfo[0].collider.GetComponent<EnemyAI>().TakeDamage(_damage);
             else hitInfo[0].collider.GetComponent<Player>().TakeDamage(_damage);
-            GameObject obj = MonoBehaviour.Instantiate(bullet, _pointStartRaycast.transform.position, _pointStartRaycast.transform.rotation, parent) as GameObject;
-            obj.GetComponent<Bullet>().damage = _damage;
-            obj.GetComponent<Bullet>().point = hitInfo[0].point;
             return true;
         }
         return false;

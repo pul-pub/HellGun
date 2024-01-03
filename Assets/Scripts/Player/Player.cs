@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     private PlayerInterface _playerInterface;
     private Camera _camera;
     private CameraContoller _cameraContoller;
+    private ParticleSystem[] _particleSystems;
     private AudioSource _audioSource;
     private Animator _anim;
     private float _velocety;
@@ -37,6 +38,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        _particleSystems = GetComponentsInChildren<ParticleSystem>();
         _controller = GetComponent<CharacterController>();
         _playerInterface = GetComponent<PlayerInterface>();
         _anim = hands.GetComponent<Animator>();
@@ -73,6 +75,7 @@ public class Player : MonoBehaviour
                 StaticVal.inv[_numGun - 1] >= 0 && StaticVal.gun[StaticVal.inv[_numGun - 1]].currentAmmos >= 1 && !_playerInterface._isPause &&
                 !_playerInterface._isWinOrFail)
             {
+                _particleSystems[Random.Range(0, _particleSystems.Length)].Play();
                 if (StaticVal.gun[StaticVal.inv[_numGun - 1]].Shoot(bullet, parent, Random.Range(7, 14), pointStartRaycast, LayerMask.GetMask("Enemy"),
                     "Enemy", true))
                 {
@@ -100,6 +103,11 @@ public class Player : MonoBehaviour
             _audioSource.Play();
             StartCoroutine(Reload());
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            StartCoroutine(Jamp(200));
+        }
     }
 
     private void FixedUpdate()
@@ -121,6 +129,15 @@ public class Player : MonoBehaviour
         DoGravity();
     }
 
+    IEnumerator Jamp(float _force)
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            _controller.Move(transform.up * (_force / 30) * Time.fixedDeltaTime);
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
     private void Move(Vector3 _direction, float _speedObj)
     {
         _controller.Move(((transform.right * (_direction.z * _speedObj)) + (transform.forward * (_direction.x * _speedObj))) * Time.fixedDeltaTime);
@@ -140,22 +157,18 @@ public class Player : MonoBehaviour
             {
                 _numGun = 1;
                 _flagGun = true;
-                _anim.SetBool("noGun", false);
             }
             else if (_numGun == 1 && _flagGun == true)
             {
                 _flagGun = false;
-                _anim.SetBool("noGun", true);
             }
             else if (_numGun == 1 && _flagGun == false)
             {
                 _flagGun = true;
-                _anim.SetBool("noGun", false);
             }
             if (StaticVal.inv[0] < 0)
             {
                 _flagGun = false;
-                _anim.SetBool("noGun", true);
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -164,23 +177,28 @@ public class Player : MonoBehaviour
             {
                 _numGun = 2;
                 _flagGun = true;
-                _anim.SetBool("noGun", false);
             }
             else if (_numGun == 2 && _flagGun == true)
             {
                 _flagGun = false;
-                _anim.SetBool("noGun", true);
             }
             else if (_numGun == 2 && _flagGun == false)
             {
                 _flagGun = true;
-                _anim.SetBool("noGun", false);
             }
             if (StaticVal.inv[1] < 0)
             {
                 _flagGun = false;
-                _anim.SetBool("noGun", true);
             }
+        }
+
+        if (_flagGun)
+        {
+            _anim.SetBool("noGun", false);
+        }
+        else
+        {
+            _anim.SetBool("noGun", true);
         }
     }
 
