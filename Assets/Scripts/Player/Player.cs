@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
+public enum TypeBullet { Enemy, Player };
+
 public class Player : MonoBehaviour
 {
     [Header("Move")]
@@ -10,6 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject[] pullWeapons;
     [SerializeField] private GameObject store;
     [SerializeField] private GameObject pointStartRaycast;
+    [SerializeField] private GameObject pointStartRaycast2;
     [SerializeField] private Transform parent;
     [SerializeField] private Object bullet;
     [Header("Body")]
@@ -29,10 +32,13 @@ public class Player : MonoBehaviour
     private Vector3 _moveDirection;
     private int _numGun;
     private float _timeBtwShot = 1f;
-    private bool _flagGun = true;
+    public bool _flagGun = false;
+    public bool _flagMedic = false;
+    public int numMedic = 5;
     private bool _isReload = false;
     private bool _onAim = false;
     private float _hp = 100;
+    public float timer = 5f;
 
     private readonly float _gravity = -9.81f;
 
@@ -49,91 +55,120 @@ public class Player : MonoBehaviour
         Cursor.visible = false;
         Time.timeScale = 1f;
         _numGun = 1;
+        numMedic = 5;
+        _flagMedic = false;
         _flagGun = false;
         ClosePullGun(StaticVal.inv[_numGun - 1]);
     }
 
     void Update()
     {
-        _moveDirection = new Vector3(Input.GetAxis("Vertical"), 0, Input.GetAxis("Horizontal"));
-
-        if (Input.GetMouseButtonDown(1))
+        if (!_playerInterface._isPause && !_playerInterface._isWinOrFail)
         {
-            _onAim = true;
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            _onAim = false;
-        }
-
-        SetGun();
-        SetTypeAim();
-
-        if (_timeBtwShot <= 0)
-        {
-            if (Input.GetMouseButton(0) && _flagGun == true && 
-                StaticVal.inv[_numGun - 1] >= 0 && StaticVal.gun[StaticVal.inv[_numGun - 1]].currentAmmos >= 1 && !_playerInterface._isPause &&
-                !_playerInterface._isWinOrFail)
+            if (Input.GetKey(KeyCode.Alpha3) && _hp < 100 && numMedic > 0)
             {
-                _particleSystems[Random.Range(0, _particleSystems.Length)].Play();
-                if (StaticVal.gun[StaticVal.inv[_numGun - 1]].Shoot(bullet, parent, Random.Range(7, 14), pointStartRaycast, LayerMask.GetMask("Enemy"),
-                    "Enemy", true))
+                _flagGun = false;
+                _flagMedic = true;
+                timer -= Time.deltaTime;
+                if (timer < 0)
                 {
-                    _playerInterface.Hiting();
+                    _hp += 32;
+                    if (_hp > 100)
+                    {
+                        _hp = 100;
+                    }
+                    timer = 5f;
+                    _flagMedic = false;
+                    numMedic--;
                 }
-                
-                _cameraContoller.Recoil(StaticVal.gun[StaticVal.inv[_numGun - 1]].angelVertical);
-                _audioSource.clip = shootClip;
-                _audioSource.Play();
-                _timeBtwShot = StaticVal.gun[StaticVal.inv[_numGun - 1]].startTimeBtwShot;
             }
-        }
-        else if (_timeBtwShot > 0)
-        {
-            _timeBtwShot -= Time.deltaTime;
-        }
+            else
+            {
+                timer = 5f;
+            }
 
-        if (Input.GetKeyDown(KeyCode.R) && StaticVal.ammo >= 1 && 
-            StaticVal.gun[StaticVal.inv[_numGun - 1]].currentAmmos != StaticVal.gun[StaticVal.inv[_numGun - 1]].ammo && _isReload == false && _flagGun &&
-            !_playerInterface._isPause && !_playerInterface._isWinOrFail)
-        {
-            _isReload = true;
-            _anim.SetTrigger("Reload");
-            _audioSource.clip = reloadClip;
-            _audioSource.Play();
-            StartCoroutine(Reload());
-        }
+            _moveDirection = new Vector3(Input.GetAxis("Vertical"), 0, Input.GetAxis("Horizontal"));
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StartCoroutine(Jamp(200));
+            if (Input.GetMouseButtonDown(1))
+            {
+                _onAim = true;
+            }
+            else if (Input.GetMouseButtonUp(1))
+            {
+                _onAim = false;
+            }
+
+            SetGun();
+            SetTypeAim();
+
+            if (_timeBtwShot <= 0)
+            {
+                if (Input.GetMouseButton(0) && _flagGun == true &&
+                    StaticVal.inv[_numGun - 1] >= 0 && StaticVal.gun[StaticVal.inv[_numGun - 1]].currentAmmos >= 1 && !_playerInterface._isPause &&
+                    !_playerInterface._isWinOrFail)
+                {
+                    _particleSystems[Random.Range(0, _particleSystems.Length)].Play();
+                    if (StaticVal.gun[StaticVal.inv[_numGun - 1]].Shoot(bullet, parent, pointStartRaycast, pointStartRaycast2, TypeBullet.Enemy))
+                    {
+                        _playerInterface.Hiting();
+                    }
+
+                    _cameraContoller.Recoil(StaticVal.gun[StaticVal.inv[_numGun - 1]].angelVertical);
+                    _audioSource.clip = shootClip;
+                    _audioSource.Play();
+                    _timeBtwShot = StaticVal.gun[StaticVal.inv[_numGun - 1]].startTimeBtwShot;
+                }
+            }
+            else if (_timeBtwShot > 0)
+            {
+                _timeBtwShot -= Time.deltaTime;
+            }
+
+            if (Input.GetKeyDown(KeyCode.R) && StaticVal.ammo >= 1 &&
+                StaticVal.gun[StaticVal.inv[_numGun - 1]].currentAmmos != StaticVal.gun[StaticVal.inv[_numGun - 1]].ammo && _isReload == false && _flagGun &&
+                !_playerInterface._isPause && !_playerInterface._isWinOrFail)
+            {
+                _isReload = true;
+                _anim.SetTrigger("Reload");
+                _audioSource.clip = reloadClip;
+                _audioSource.Play();
+                StartCoroutine(Reload());
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                StartCoroutine(Jamp(200));
+            }
         }
     }
 
     private void FixedUpdate()
     {
-        if (_controller.isGrounded && _velocety < 0)
+        if (!_playerInterface._isPause && !_playerInterface._isWinOrFail)
         {
-            _velocety = -2;
-        }
+            if (_controller.isGrounded && _velocety < 0)
+            {
+                _velocety = -2;
+            }
 
-        if ((_moveDirection.x != 0 || _moveDirection.z != 0) && Input.GetKey(KeyCode.LeftShift))
-        {
-            Move(_moveDirection, speedRun);
-        }
-        else if (_moveDirection.x != 0 || _moveDirection.z != 0)
-        {
-            Move(_moveDirection, speed);
-        }
+            if ((_moveDirection.x != 0 || _moveDirection.z != 0) && Input.GetKey(KeyCode.LeftShift))
+            {
+                Move(_moveDirection, speedRun);
+            }
+            else if (_moveDirection.x != 0 || _moveDirection.z != 0)
+            {
+                Move(_moveDirection, speed);
+            }
 
-        DoGravity();
+            DoGravity();
+        }
     }
 
     IEnumerator Jamp(float _force)
     {
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 50; i++)
         {
-            _controller.Move(transform.up * (_force / 30) * Time.fixedDeltaTime);
+            _controller.Move(transform.up * (_force / 50) * Time.fixedDeltaTime);
             yield return new WaitForEndOfFrame();
         }
     }

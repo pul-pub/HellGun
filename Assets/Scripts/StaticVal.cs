@@ -14,8 +14,9 @@ public static class StaticVal
     public static int scoreWithPoint = 0;
     public static int moneyForBattle = 0;
     public static int levlEnemy = 0;
+    public static bool hiting;
 
-    public static int[] inv = { 0, -1 };
+    public static int[] inv = { -1, 3 };
     public static int[] shoped = { 0, -1, -1, -1, -1 };
     public static int[] dmEnemy = { 7, 12, 19, 24, 30, 45, 56, 69, 86, 91};
     public static float[] speedEnemy = { 3f, 3.2f, 3.6f, 4f, 4.2f, 4.8f, 5f, 5.8f, 6.2f, 6.5f };

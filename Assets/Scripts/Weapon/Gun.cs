@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-[Serializable]
+
 public class Gun
 {
     public string name;
@@ -29,22 +28,63 @@ public class Gun
         this.posHendsOnAim = posHendsOnAim;
     }
 
-    public bool Shoot(UnityEngine.Object bullet, Transform parent, float _damage, GameObject _pointStartRaycast, LayerMask _maskRaycast, string _tag, bool _enemy)
+    public bool Shoot(UnityEngine.Object bullet, Transform parent, GameObject _pointStartRaycast, GameObject _pointStartRaycast2,
+        TypeBullet _type)
     {
         currentAmmos--;
-        RaycastHit[] hitInfo = Physics.RaycastAll(_pointStartRaycast.transform.position, -_pointStartRaycast.transform.right, 750f, _maskRaycast);
-        RaycastHit[] hitWithBullet = Physics.RaycastAll(_pointStartRaycast.transform.position, -_pointStartRaycast.transform.right, 750f);
+        Ray rayE = new Ray(_pointStartRaycast.transform.position, -_pointStartRaycast2.transform.right.normalized);
+        Ray rayP = new Ray(_pointStartRaycast.transform.position, -_pointStartRaycast2.transform.right.normalized);
+
+        if (_type == TypeBullet.Enemy && Physics.Raycast(rayE, out RaycastHit hitInfoE, 700f, LayerMask.GetMask("Enemy", "Ray")))
+        {
+            Collider col = hitInfoE.collider;
+
+            GameObject obj = UnityEngine.Object.Instantiate(bullet, _pointStartRaycast.transform.position, _pointStartRaycast.transform.rotation, parent) as GameObject;
+            obj.GetComponent<Bullet>().point = hitInfoE.point;
+
+            if (col.GetComponents<EnemyAI>().Length > 0)
+            {
+                col.GetComponent<EnemyAI>().TakeDamage(dm);
+                return true;
+            }
+        }
+        else if (_type == TypeBullet.Player && Physics.Raycast(rayP, out RaycastHit hitInfoP, 700f, LayerMask.GetMask("Player", "Ray")))
+        {
+            Collider col = hitInfoP.collider;
+
+            GameObject obj = UnityEngine.Object.Instantiate(bullet, _pointStartRaycast.transform.position, _pointStartRaycast.transform.rotation, parent) as GameObject;
+            obj.GetComponent<Bullet>().point = hitInfoP.point;
+
+            if (col.GetComponents<Player>().Length > 0)
+            {
+                col.GetComponent<Player>().TakeDamage(dm);
+                return true;
+            }
+        }
+
+        return false;
+
+        /*
+        RaycastHit[] hitInfo = Physics.RaycastAll(_pointStartRaycast2.transform.position, -_pointStartRaycast2.transform.right, 750f, _maskRaycast);
+
         GameObject obj = UnityEngine.Object.Instantiate(bullet, _pointStartRaycast.transform.position, _pointStartRaycast.transform.rotation, parent) as GameObject;
         obj.GetComponent<Bullet>().damage = _damage;
-        if (hitWithBullet.Length > 0) obj.GetComponent<Bullet>().point = hitWithBullet[0].point;
+        if (hitInfo.Length > 0) obj.GetComponent<Bullet>().point = hitInfo[0].point;
         else obj.GetComponent<Bullet>().point = -_pointStartRaycast.transform.right.normalized * 700;
         if (hitInfo.Length != 0)
         {
-            if (_enemy) hitInfo[0].collider.GetComponent<EnemyAI>().TakeDamage(_damage);
-            else hitInfo[0].collider.GetComponent<Player>().TakeDamage(_damage);
-            return true;
+            if (_enemy && hitInfo[0].collider.GetComponents<EnemyAI>().Length > 0)
+            {
+                hitInfo[0].collider.GetComponent<EnemyAI>().TakeDamage(_damage);
+                return true;
+            }
+            else if (!_enemy && hitInfo[0].collider.GetComponents<Player>().Length > 0)
+            {
+                hitInfo[0].collider.GetComponent<Player>().TakeDamage(_damage);
+            }
         }
         return false;
+        */
     }
 
     public int Reload(int _ammos)
@@ -62,5 +102,15 @@ public class Gun
             returnAmmos = 0;
         }
         return returnAmmos;
+    }
+
+    private Vector3 CalcucateRandom()
+    {
+        return new Vector3
+        (
+            Random.Range(-2, 2),
+            Random.Range(-2, 2),
+            Random.Range(-2, 2)
+        );
     }
 }

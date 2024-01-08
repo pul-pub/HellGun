@@ -1,5 +1,3 @@
-using System.Collections;
-using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -42,7 +40,7 @@ public class EnemyAI : MonoBehaviour
         _anim = GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
 
-        _gun = new Gun("AKM", 0, 0.5f, 10, 0.15f, false, 1f, 10, new Vector3(-0.54f, -0.8f, 0));
+        _gun = new Gun("AKM", 0, 3f, 10, 0.15f, false, 1f, 10, new Vector3(-0.54f, -0.8f, 0));
     }
 
     private void Update()
@@ -100,16 +98,17 @@ public class EnemyAI : MonoBehaviour
         //Make sure enemy doesn't move
         agent.isStopped = true;
 
-        body.transform.LookAt(player.position - new Vector3(2, 2, 0));
-
+        //body.transform.LookAt(player.position - new Vector3(5, 3, 0));
+        Vector3 vec = (player.position - transform.position);
+        transform.rotation = Quaternion.LookRotation(vec.normalized);
 
         if (_timeBtwShot <= 0)
         {
             if (_gun.currentAmmos >= 1 && !isRelod)
             {
-                _gun.Shoot(bullet, parent, _gun.dm, pointStartRaycast, LayerMask.GetMask("Player"), "Plyer", false);
+                _gun.Shoot(bullet, parent, pointStartRaycast, pointStartRaycast, TypeBullet.Player);
 
-                //_audioSource.Play();
+                _audioSource.Play();
                 _timeBtwShot = _gun.startTimeBtwShot;
             }
             else
@@ -128,7 +127,12 @@ public class EnemyAI : MonoBehaviour
     {
         health -= damage;
 
-        if (health <= 0) Destroy(gameObject);
+        if (health <= 0)
+        {
+            player.GetComponent<PlayerInterface>().Kill();
+            StaticVal.moneyForBattle += 150;
+            Destroy(gameObject);
+        }
     }
 
     private void Reload()

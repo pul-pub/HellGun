@@ -6,6 +6,11 @@ using TMPro;
 
 public class PlayerInterface : MonoBehaviour
 {
+    public Translator translator;
+    [Header("Texture")]
+    [SerializeField] private Sprite[] imgWeapon;
+    [SerializeField] private Image icon1gun;
+    [SerializeField] private Image icon2gun;
     [Header("GUI")]
     [SerializeField] private GameObject aim;
     [SerializeField] private GameObject opticsAim;
@@ -15,6 +20,7 @@ public class PlayerInterface : MonoBehaviour
     [SerializeField] private Image imgPoint;
     [SerializeField] private Point point;
     [SerializeField] private Slider progressBarHealth;
+    [SerializeField] private TextMeshProUGUI textForPlayer; 
     [Header("Enemy and Icon")]
     [SerializeField] private RectTransform[] iconEnemy;
     [SerializeField] private Transform[] enemyTransform;
@@ -23,9 +29,16 @@ public class PlayerInterface : MonoBehaviour
     [SerializeField] private TextMeshProUGUI textAmmos;
     [Header("Screens")]
     [SerializeField] private GameObject screenPause;
+    [SerializeField] private TextMeshProUGUI contline;
+    [SerializeField] private TextMeshProUGUI exit;
+    [SerializeField] private TextMeshProUGUI exitWin;
     [SerializeField] private Image screenWin;
     [SerializeField] private TextMeshProUGUI textForWinOrFail;
+    [SerializeField] private TextMeshProUGUI textPause;
     [SerializeField] private TextMeshProUGUI textScores;
+    [Header("Medic")]
+    [SerializeField] private TextMeshProUGUI textMedic;
+    [SerializeField] private Slider sliderMedic;
 
     private Camera _cam;
     private Player _player;
@@ -41,6 +54,10 @@ public class PlayerInterface : MonoBehaviour
         _isHit = false;
         _isPause = false;
         _isWinOrFail = false;
+
+        SetWeaponImg();
+        StartCoroutine(Messages("task"));
+        AwakeTranslet();
     }
 
     void Update()
@@ -93,6 +110,46 @@ public class PlayerInterface : MonoBehaviour
         {
             WinGame();
         }
+        else if (_player.Health <= 0f)
+        {
+            FailGame();
+        }
+    }
+
+    private void AwakeTranslet()
+    {
+        contline.text = translator.Translating("contline");
+        exit.text = translator.Translating("toMenu");
+        exitWin.text = translator.Translating("toMenu");
+        textPause.text = translator.Translating("pause");
+    }
+
+    public void Kill()
+    {
+        StartCoroutine(Messages("kill"));
+    }
+
+    private void SetWeaponImg()
+    {
+        if (StaticVal.inv[0] < 0)
+        {
+            icon1gun.color = new Color(255, 255, 255, 0);
+        }
+        else
+        {
+            icon1gun.color = new Color(255, 255, 255, 255);
+            icon1gun.sprite = imgWeapon[StaticVal.inv[0]];
+        }
+
+        if (StaticVal.inv[1] < 0)
+        {
+            icon2gun.color = new Color(255, 255, 255, 0);
+        }
+        else
+        {
+            icon2gun.color = new Color(255, 255, 255, 255);
+            icon2gun.sprite = imgWeapon[StaticVal.inv[1]];
+        }
     }
 
     private void SetPositionIcon()
@@ -133,6 +190,18 @@ public class PlayerInterface : MonoBehaviour
         }
     }
 
+    IEnumerator Messages(string key)
+    {
+        textForPlayer.text = translator.Translating(key);
+        textForPlayer.color = new Color(1f, 0, 0, 1f);
+        yield return new WaitForSeconds(1.5f);
+        for (int i = 0; i <= 100; i++)
+        {
+            textForPlayer.color -= new Color(0, 0, 0, 0.01f);
+            yield return new WaitForSeconds(0.01f);
+        }
+    }
+
     IEnumerator Hited()
     {
         _isHit = true;
@@ -145,28 +214,14 @@ public class PlayerInterface : MonoBehaviour
     public void WinGame()
     {
         textScores.text = StaticVal.moneyForBattle.ToString() + " $";
-        if (StaticVal.language == "ru")
-        {
-            textForWinOrFail.text = "Миссия завершена.";
-        }
-        else
-        {
-            textForWinOrFail.text = "Mission complete.";
-        }
+        textForWinOrFail.text = translator.Translating("win");
         StartCoroutine(WinScreenOpen());
     }
 
     public void FailGame()
     {
         textScores.text = (StaticVal.moneyForBattle / 2).ToString() + " $";
-        if (StaticVal.language == "ru")
-        {
-            textForWinOrFail.text = "Миссия не завершена.";
-        }
-        else
-        {
-            textForWinOrFail.text = "Mission not complete.";
-        }
+        textForWinOrFail.text = translator.Translating("fail");
         StartCoroutine(WinScreenOpen());
     }
 
@@ -205,15 +260,25 @@ public class PlayerInterface : MonoBehaviour
 
     public void UpdateTextAmmos()
     {
-        if (StaticVal.inv[_player.NumberWeapon - 1] >= 0)
+        if (_player._flagGun)
         {
+            sliderMedic.gameObject.SetActive(false);
             textAmmosInInventory.text = StaticVal.ammo.ToString();
             textAmmos.text = StaticVal.gun[StaticVal.inv[_player.NumberWeapon - 1]].currentAmmos.ToString();
             if (StaticVal.gun[StaticVal.inv[_player.NumberWeapon - 1]].currentAmmos == 0) textAmmos.color = Color.red;
             else textAmmos.color = Color.white;
         }
+        else if (_player._flagMedic)
+        {
+            sliderMedic.gameObject.SetActive(true);
+            textMedic.text = translator.Translating("medic");
+            sliderMedic.value = 5f - _player.timer;
+            textAmmosInInventory.text = "--";
+            textAmmos.text = _player.numMedic.ToString();
+        }
         else
         {
+            sliderMedic.gameObject.SetActive(false);
             textAmmosInInventory.text = "--";
             textAmmos.text = "--";
         }

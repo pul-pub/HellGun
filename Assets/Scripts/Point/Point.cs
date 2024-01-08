@@ -57,6 +57,7 @@ public class Point : MonoBehaviour
         }
         else
         {
+            color = Color.white;
             _onPoint = false;
             _who = WhoCapturingPoint.Null;
             time = _startTime;
