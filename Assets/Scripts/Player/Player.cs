@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
     private Vector3 _moveDirection;
     private int _numGun;
     private float _timeBtwShot = 1f;
-    public bool _flagGun = false;
+    public bool _flagGun = true;
     public bool _flagMedic = false;
     public int numMedic = 5;
     private bool _isReload = false;
@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
         _numGun = 1;
         numMedic = 5;
         _flagMedic = false;
-        _flagGun = false;
+        _flagGun = true;
         ClosePullGun(StaticVal.inv[_numGun - 1]);
     }
 
@@ -193,17 +193,13 @@ public class Player : MonoBehaviour
                 _numGun = 1;
                 _flagGun = true;
             }
-            else if (_numGun == 1 && _flagGun == true)
-            {
-                _flagGun = false;
-            }
-            else if (_numGun == 1 && _flagGun == false)
-            {
-                _flagGun = true;
-            }
             if (StaticVal.inv[0] < 0)
             {
                 _flagGun = false;
+            }
+            else
+            {
+                _flagGun = true;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -213,17 +209,13 @@ public class Player : MonoBehaviour
                 _numGun = 2;
                 _flagGun = true;
             }
-            else if (_numGun == 2 && _flagGun == true)
-            {
-                _flagGun = false;
-            }
-            else if (_numGun == 2 && _flagGun == false)
-            {
-                _flagGun = true;
-            }
             if (StaticVal.inv[1] < 0)
             {
                 _flagGun = false;
+            }
+            else
+            {
+                _flagGun = true;
             }
         }
 

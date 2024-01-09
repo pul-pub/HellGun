@@ -1,10 +1,14 @@
 ﻿using TMPro;
 using UnityEngine;
+using YG;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MaineMenu : MonoBehaviour
 {
+    [SerializeField] private Translator translator;
+    [SerializeField] private string[] key;
+    [SerializeField] private TextMeshProUGUI[] text;
     public Slider music;
     public Slider sensMouse;
     public TextMeshProUGUI money;
@@ -19,26 +23,9 @@ public class MaineMenu : MonoBehaviour
 
     private void Awake()
     {
-        if (PlayerPrefs.GetString("flag") != "t")
-        {
-            PlayerPrefs.SetInt("money", StaticVal.money);
-            PlayerPrefs.SetFloat("music", StaticVal.volMusic);
-            PlayerPrefs.SetFloat("sens", StaticVal.sens);
-            PlayerPrefs.SetString("flag", "t");
-        }
-        else
-        {
-            StaticVal.money = PlayerPrefs.GetInt("money");
-            StaticVal.volMusic = PlayerPrefs.GetFloat("music");
-            StaticVal.sens = PlayerPrefs.GetFloat("sens");
-            StaticVal.inv[0] = PlayerPrefs.GetInt("inv0");
-            StaticVal.inv[1] = PlayerPrefs.GetInt("inv1");
+        StaticVal.language = YG.YandexGame.lang;
+        Tras();
 
-            for (int i = 0; i < StaticVal.shoped.Length; i++)
-            {
-                StaticVal.shoped[i] = PlayerPrefs.GetInt("shop" + i.ToString());
-            }
-        }
     }
 
     private void Update()
@@ -72,76 +59,71 @@ public class MaineMenu : MonoBehaviour
 
     public void Play()
     {
-        //Adv.ShowAdv();
-        //Adv.ShowAdv();
+        YG.YandexGame.FullscreenShow();
         StaticVal.ammo = 200;
         StaticVal.levlEnemy = 0;
         for (int i = 0; i < StaticVal.gun.Length; i++)
         {
-            StaticVal.gun[i].currentAmmos = 0;
+            StaticVal.gun[i].currentAmmos = StaticVal.gun[i].ammo;
         }
     }
+
+    public void _LoadingScene()
+    {
+        SceneManager.LoadScene(1, LoadSceneMode.Single);
+    }
+
     public void SettingVol()
     {
         StaticVal.volMusic = music.value;
-        PlayerPrefs.SetFloat("music", StaticVal.volMusic);
+
+        YandexGame.savesData.volMusic = StaticVal.volMusic;
+        YandexGame.SaveProgress();
     }
+
     public void SetSens()
     {
         StaticVal.sens = sensMouse.value;
-        PlayerPrefs.SetFloat("sens", StaticVal.sens);
+
+        YandexGame.savesData.sens = StaticVal.sens;
+        YandexGame.SaveProgress();
     }
+
     public void Shoped(int _id)
     {
         if (StaticVal.money - StaticVal.gun[_id].moneys >= 0)
         {
             StaticVal.money -= StaticVal.gun[_id].moneys;
             StaticVal.shoped[_id] = _id;
-            PlayerPrefs.SetInt("shop" + _id.ToString(), _id);
         }
         else Debug.Log("No");
+
+        YandexGame.savesData.money = StaticVal.money;
+        YandexGame.savesData.shoped = StaticVal.shoped;
+        YandexGame.SaveProgress();
     }
     public void SetGun(string _num)
     {
-        if (_num == "01")////
+        StaticVal.inv[_num[0]] = _num[1];
+
+        YandexGame.savesData.inv = StaticVal.inv;
+        YandexGame.SaveProgress();
+    }
+
+    private void Tras()
+    {
+        for (int i = 0; i < text.Length; i++)
         {
-            StaticVal.inv[0] = 1;
-            PlayerPrefs.SetInt("inv0", 1);
+            text[i].text = translator.Translating(key[i]);
         }
-        else if (_num == "02")
-        {
-            StaticVal.inv[0] = 2;
-            PlayerPrefs.SetInt("inv0", 2);
-        }
-        else if (_num == "03")
-        {
-            StaticVal.inv[0] = 3;
-            PlayerPrefs.SetInt("inv0", 3);
-        }
-        else if (_num == "04")/////////
-        {
-            StaticVal.inv[0] = 4;
-            PlayerPrefs.SetInt("inv0", 4);
-        }
-        else if (_num == "11")/////////
-        {
-            StaticVal.inv[1] = 1;
-            PlayerPrefs.SetInt("inv1", 1);
-        }
-        else if (_num == "12")
-        {
-            StaticVal.inv[1] = 2;
-            PlayerPrefs.SetInt("inv1", 2);
-        }
-        else if (_num == "13")
-        {
-            StaticVal.inv[1] = 3;
-            PlayerPrefs.SetInt("inv1", 3);
-        }
-        else if (_num == "14") /////
-        {
-            StaticVal.inv[1] = 4;
-            PlayerPrefs.SetInt("inv1", 4);
-        }
+    }
+
+    public void OnRewarded()
+    {
+        StaticVal.money += 725;
+
+
+        YandexGame.savesData.money = StaticVal.money;
+        YandexGame.SaveProgress();
     }
 }
