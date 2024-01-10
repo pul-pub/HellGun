@@ -94,18 +94,23 @@ public class PlayerInterface : MonoBehaviour
         {
             progressBarPoint.value = point.time / 100;
         }
+        else
+        {
+            progressBarPoint.value = 1;
+        }
+
+        if (point.capturePoints[0] == WhoCapturingPoint.Enemy)
+        {
+            imgPoint.color = Color.red;
+        }
+        else if (point.capturePoints[0] == WhoCapturingPoint.Player)
+        {
+            imgPoint.color = Color.blue;
+        }
 
         if (bgPoint.color != point.color)
         {
             bgPoint.color = point.color;
-            if (point.capturePoints[0] == WhoCapturingPoint.Enemy && imgPoint.color != Color.red)
-            {
-                imgPoint.color = Color.red;
-            }
-            else if (point.capturePoints[0] == WhoCapturingPoint.Player && imgPoint.color != Color.blue)
-            {
-                imgPoint.color = Color.blue;
-            }
         }
 
         if (point.time >= 30f && point.capturePoints[0] == WhoCapturingPoint.Player && timer <= 0f && !_isPause && !_isWinOrFail)

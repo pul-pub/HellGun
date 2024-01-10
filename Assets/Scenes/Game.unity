@@ -962,7 +962,7 @@ GameObject:
   - component: {fileID: 92778827}
   - component: {fileID: 92778829}
   - component: {fileID: 92778828}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Fire3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6883,7 +6883,7 @@ GameObject:
   - component: {fileID: 295105122}
   - component: {fileID: 295105124}
   - component: {fileID: 295105123}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: VSS-Vintorez
   m_TagString: Pl
   m_Icon: {fileID: 0}
@@ -7133,7 +7133,7 @@ GameObject:
   - component: {fileID: 304542726}
   - component: {fileID: 304542728}
   - component: {fileID: 304542727}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: SA-VAL
   m_TagString: Pl
   m_Icon: {fileID: 0}
@@ -7307,7 +7307,7 @@ GameObject:
   - component: {fileID: 348528017}
   - component: {fileID: 348528019}
   - component: {fileID: 348528018}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Fire4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12615,7 +12615,7 @@ GameObject:
   - component: {fileID: 440549124}
   - component: {fileID: 440549126}
   - component: {fileID: 440549125}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Fire2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20240,7 +20240,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 853990893}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: RAYCAST
   m_TagString: Pl
   m_Icon: {fileID: 0}
@@ -20554,7 +20554,7 @@ GameObject:
   - component: {fileID: 893275119}
   - component: {fileID: 893275121}
   - component: {fileID: 893275120}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: M-16
   m_TagString: Pl
   m_Icon: {fileID: 0}
@@ -21762,7 +21762,7 @@ GameObject:
   - component: {fileID: 966938901}
   - component: {fileID: 966938903}
   - component: {fileID: 966938902}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: AK-108
   m_TagString: Pl
   m_Icon: {fileID: 0}
@@ -23695,7 +23695,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1362444642}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: FireSystem
   m_TagString: Pl
   m_Icon: {fileID: 0}
@@ -27038,7 +27038,7 @@ GameObject:
   - component: {fileID: 1966864588}
   - component: {fileID: 1966864590}
   - component: {fileID: 1966864589}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Fire1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33702,7 +33702,7 @@ GameObject:
   - component: {fileID: 2143502201}
   - component: {fileID: 2143502203}
   - component: {fileID: 2143502202}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Fire0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38528,7 +38528,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5369595714511402598}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: forearm.R.001_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38585,7 +38585,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3655303398539673614}
   - component: {fileID: 8471650725658638622}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Hands
   m_TagString: Pl
   m_Icon: {fileID: 0}
@@ -38637,7 +38637,7 @@ GameObject:
   m_Component:
   - component: {fileID: 489653763959774059}
   - component: {fileID: 972857979775812050}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Hands
   m_TagString: Pl
   m_Icon: {fileID: 0}
@@ -38674,7 +38674,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9022213713916154716}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: forearm.R_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38875,7 +38875,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5906647348789415542}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: upper_arm.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38891,7 +38891,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4143144346346150188}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: forearm.L.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38994,7 +38994,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 970417236709185564}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: upper_arm.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39040,7 +39040,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2000599363176488756}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: forearm.L.001_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39073,7 +39073,7 @@ GameObject:
   - component: {fileID: 6336187606736864603}
   - component: {fileID: 7792809477981264004}
   - component: {fileID: 7889604306897865785}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: AK-47
   m_TagString: Pl
   m_Icon: {fileID: 0}
@@ -39426,7 +39426,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8105916384443164540}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: metarig
   m_TagString: Pl
   m_Icon: {fileID: 0}
@@ -39512,7 +39512,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8746141632381756653}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: forearm.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39738,7 +39738,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5981669498693701143}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: forearm.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39803,7 +39803,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2242950511860067804}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: forearm.L_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39879,7 +39879,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6596347291434683850}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: forearm.R.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39962,7 +39962,7 @@ GameObject:
   - component: {fileID: 4173326490867623213}
   - component: {fileID: 3170861371504035584}
   - component: {fileID: 7708269366234717841}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Magazin
   m_TagString: Pl
   m_Icon: {fileID: 0}
