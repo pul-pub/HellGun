@@ -13,7 +13,7 @@ public static class StaticVal
     public static int kills = 0;
     public static int scoreWithPoint = 0;
     public static int moneyForBattle = 0;
-    public static int levlEnemy = 0;
+    public static int numEnemy = 11;
     public static bool hiting;
 
     public static int[] inv = { 0, -1 };

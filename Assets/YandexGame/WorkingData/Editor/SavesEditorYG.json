@@ -1,0 +1,20 @@
+{
+    "idSave": 24,
+    "isFirstSession": false,
+    "language": "ru",
+    "promptDone": false,
+    "volMusic": 100.0,
+    "sens": 800.0,
+    "money": 800,
+    "inv": [
+        1,
+        3
+    ],
+    "shoped": [
+        0,
+        1,
+        -1,
+        3,
+        -1
+    ]
+}

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using YG;
 
 public class PlayerInterface : MonoBehaviour
 {
@@ -39,6 +40,14 @@ public class PlayerInterface : MonoBehaviour
     [Header("Medic")]
     [SerializeField] private TextMeshProUGUI textMedic;
     [SerializeField] private Slider sliderMedic;
+    [Header("Settings")]
+    [SerializeField] private Slider music;
+    [SerializeField] private Slider sensMouse;
+    [SerializeField] private TextMeshProUGUI headerSettings;
+    [SerializeField] private TextMeshProUGUI butSettings;
+    [SerializeField] private TextMeshProUGUI sens;
+    [SerializeField] private TextMeshProUGUI vol;
+    [SerializeField] private TextMeshProUGUI back;
 
     private Camera _cam;
     private Player _player;
@@ -58,6 +67,9 @@ public class PlayerInterface : MonoBehaviour
         SetWeaponImg();
         StartCoroutine(Messages("task"));
         AwakeTranslet();
+
+        music.value = StaticVal.volMusic;
+        sensMouse.value = StaticVal.sens;
     }
 
     void Update()
@@ -66,7 +78,7 @@ public class PlayerInterface : MonoBehaviour
         UpdateTextAmmos();
         progressBarHealth.value = _player.Health;
 
-        if (Input.GetKeyDown(KeyCode.Tab) && !_isWinOrFail)
+        if ((Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Escape)) && !_isWinOrFail)
         {
             if (_isPause)
             {
@@ -106,8 +118,12 @@ public class PlayerInterface : MonoBehaviour
             timer -= Time.deltaTime;
         }
 
-        if (StaticVal.scoreWithPoint == 10)
+        if (StaticVal.scoreWithPoint >= 100 || StaticVal.numEnemy <= 0)
         {
+            if (StaticVal.scoreWithPoint >= 120)
+            {
+                StaticVal.moneyForBattle += 575;
+            }
             WinGame();
         }
         else if (_player.Health <= 0f)
@@ -122,6 +138,12 @@ public class PlayerInterface : MonoBehaviour
         exit.text = translator.Translating("toMenu");
         exitWin.text = translator.Translating("toMenu");
         textPause.text = translator.Translating("pause");
+
+        headerSettings.text = translator.Translating("settings");
+        butSettings.text = translator.Translating("settings");
+        sens.text = translator.Translating("sens");
+        vol.text = translator.Translating("vol");
+        back.text = translator.Translating("back");
     }
 
     public void Kill()
@@ -258,6 +280,23 @@ public class PlayerInterface : MonoBehaviour
         _isPause = true;
     }
 
+    public void SettingVol()
+    {
+        StaticVal.volMusic = music.value;
+        AudioListener.volume = StaticVal.volMusic;
+
+        YandexGame.savesData.volMusic = StaticVal.volMusic;
+        YandexGame.SaveProgress();
+    }
+
+    public void SetSens()
+    {
+        StaticVal.sens = sensMouse.value;
+
+        YandexGame.savesData.sens = StaticVal.sens;
+        YandexGame.SaveProgress();
+    }
+
     public void UpdateTextAmmos()
     {
         if (_player._flagGun)
@@ -290,6 +329,10 @@ public class PlayerInterface : MonoBehaviour
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        SceneManager.LoadScene(0, LoadSceneMode.Single);
+        StaticVal.money = StaticVal.moneyForBattle;
+        StaticVal.moneyForBattle = 0;
+        YandexGame.savesData.money = StaticVal.money;
+        YandexGame.SaveProgress();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1, LoadSceneMode.Single);
     }
 }

@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
     private Camera _camera;
     private CameraContoller _cameraContoller;
     private ParticleSystem[] _particleSystems;
-    private AudioSource _audioSource;
+    //private AudioSource _audioSource;
     private Animator _anim;
     private float _velocety;
     private Vector3 _moveDirection;
@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _playerInterface = GetComponent<PlayerInterface>();
         _anim = hands.GetComponent<Animator>();
-        _audioSource = GetComponent<AudioSource>();
+       // _audioSource = GetComponent<AudioSource>();
         _camera = Camera.main;
         _cameraContoller = GetComponentInChildren<CameraContoller>();
         Cursor.lockState = CursorLockMode.Locked;
@@ -114,8 +114,8 @@ public class Player : MonoBehaviour
                     }
 
                     _cameraContoller.Recoil(StaticVal.gun[StaticVal.inv[_numGun - 1]].angelVertical);
-                    _audioSource.clip = shootClip;
-                    _audioSource.Play();
+                    //_audioSource.clip = shootClip;
+                    //_audioSource.Play();
                     _timeBtwShot = StaticVal.gun[StaticVal.inv[_numGun - 1]].startTimeBtwShot;
                 }
             }
@@ -130,8 +130,8 @@ public class Player : MonoBehaviour
             {
                 _isReload = true;
                 _anim.SetTrigger("Reload");
-                _audioSource.clip = reloadClip;
-                _audioSource.Play();
+                //_audioSource.clip = reloadClip;
+                //_audioSource.Play();
                 StartCoroutine(Reload());
             }
 

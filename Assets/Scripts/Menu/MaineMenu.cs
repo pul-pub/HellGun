@@ -3,6 +3,7 @@ using UnityEngine;
 using YG;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 
 public class MaineMenu : MonoBehaviour
 {
@@ -23,14 +24,21 @@ public class MaineMenu : MonoBehaviour
 
     private void Awake()
     {
-        StaticVal.language = YG.YandexGame.lang;
+        StaticVal.language = YandexGame.lang;
+        StaticVal.volMusic = YandexGame.savesData.volMusic;
+        StaticVal.money = YandexGame.savesData.money;
+        StaticVal.sens = YandexGame.savesData.sens;
+        StaticVal.inv = YandexGame.savesData.inv;
+        StaticVal.shoped = YandexGame.savesData.shoped;
         Tras();
 
+        AudioListener.volume = StaticVal.volMusic;
     }
 
     private void Update()
     {
         money.text = StaticVal.money.ToString() + " $";
+        
 
         for (int i = 0; i < StaticVal.shoped.Length; i++)
         {
@@ -59,9 +67,8 @@ public class MaineMenu : MonoBehaviour
 
     public void Play()
     {
-        YG.YandexGame.FullscreenShow();
-        StaticVal.ammo = 200;
-        StaticVal.levlEnemy = 0;
+        YandexGame.FullscreenShow();
+        StaticVal.ammo = 300;
         for (int i = 0; i < StaticVal.gun.Length; i++)
         {
             StaticVal.gun[i].currentAmmos = StaticVal.gun[i].ammo;
@@ -70,12 +77,13 @@ public class MaineMenu : MonoBehaviour
 
     public void _LoadingScene()
     {
-        SceneManager.LoadScene(1, LoadSceneMode.Single);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
     }
 
     public void SettingVol()
     {
         StaticVal.volMusic = music.value;
+        AudioListener.volume = StaticVal.volMusic;
 
         YandexGame.savesData.volMusic = StaticVal.volMusic;
         YandexGame.SaveProgress();
@@ -104,8 +112,9 @@ public class MaineMenu : MonoBehaviour
     }
     public void SetGun(string _num)
     {
-        StaticVal.inv[_num[0]] = _num[1];
-
+        string[] _inv = _num.Split(',');
+        StaticVal.inv[Int32.Parse(_inv[0])] = Int32.Parse(_inv[1]);
+        Debug.Log(_inv[0]);
         YandexGame.savesData.inv = StaticVal.inv;
         YandexGame.SaveProgress();
     }

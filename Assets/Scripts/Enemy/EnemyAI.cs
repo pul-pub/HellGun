@@ -130,6 +130,7 @@ public class EnemyAI : MonoBehaviour
         if (health <= 0)
         {
             player.GetComponent<PlayerInterface>().Kill();
+            StaticVal.numEnemy--;
             StaticVal.moneyForBattle += 150;
             Destroy(gameObject);
         }

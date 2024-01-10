@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.41679946, g: 0.44434068, b: 0.45980394, a: 1}
+  m_IndirectSpecularColor: {r: 0.3731175, g: 0.38073918, b: 0.3587305, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -994,9 +994,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1983022089}
-        m_TargetAssemblyTypeName: MaineMenu, Assembly-CSharp
-        m_MethodName: Play
+      - m_Target: {fileID: 1476570761}
+        m_TargetAssemblyTypeName: YG.YandexGame, Assembly-CSharp
+        m_MethodName: _FullscreenShow
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1631,7 +1631,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 03
+          m_StringArgument: 0,3
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &311055612
@@ -2442,7 +2442,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 01
+          m_StringArgument: 0,1
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &644501256
@@ -3395,7 +3395,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 13
+          m_StringArgument: 1,3
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &927285132
@@ -4078,7 +4078,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 04
+          m_StringArgument: 0,4
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1023211488
@@ -5234,7 +5234,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 02
+          m_StringArgument: 0,2
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1201657138
@@ -5503,7 +5503,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 11
+          m_StringArgument: 1,1
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1251365078
@@ -5630,14 +5630,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1265970565}
-  m_LocalRotation: {x: 0.0218097, y: 0.86520123, z: -0.037775517, w: 0.4995241}
+  m_LocalRotation: {x: 0, y: 0.86602545, z: 0, w: 0.49999994}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.83033895, y: 0.8303387, z: 0.8303387}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1983022088}
   m_RootOrder: -2
-  m_LocalEulerAnglesHint: {x: 5, y: 120, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 120, z: 0}
 --- !u!1 &1277428086
 GameObject:
   m_ObjectHideFlags: 0
@@ -5838,7 +5838,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 14
+          m_StringArgument: 1,4
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1278768501
@@ -7526,7 +7526,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 12
+          m_StringArgument: 1,2
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1740361293
