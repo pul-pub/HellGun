@@ -32,8 +32,8 @@ public class Gun
         TypeBullet _type)
     {
         currentAmmos--;
-        Ray rayE = new Ray(_pointStartRaycast.transform.position, -_pointStartRaycast2.transform.right.normalized);
-        Ray rayP = new Ray(_pointStartRaycast.transform.position, -_pointStartRaycast2.transform.right.normalized);
+        Ray rayE = new Ray(_pointStartRaycast2.transform.position, -_pointStartRaycast2.transform.right.normalized);
+        Ray rayP = new Ray(_pointStartRaycast2.transform.position, -_pointStartRaycast2.transform.right.normalized);
 
         if (_type == TypeBullet.Enemy && Physics.Raycast(rayE, out RaycastHit hitInfoE, 700f, LayerMask.GetMask("Enemy", "Ray")))
         {

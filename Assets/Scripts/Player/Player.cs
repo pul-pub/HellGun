@@ -6,6 +6,9 @@ public enum TypeBullet { Enemy, Player };
 public class Player : MonoBehaviour
 {
     [Header("Move")]
+    [SerializeField] private float forceJamp;
+    [SerializeField] private float hightGroundCheck;
+    [SerializeField] private LayerMask maskGround;
     [SerializeField] private float speed;
     [SerializeField] private float speedRun;
     [Header("Weapon")]
@@ -22,6 +25,7 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip reloadClip;
 
     private CharacterController _controller;
+    private Rigidbody rb;
     private PlayerInterface _playerInterface;
     private Camera _camera;
     private CameraContoller _cameraContoller;
@@ -39,11 +43,13 @@ public class Player : MonoBehaviour
     private bool _onAim = false;
     private float _hp = 100;
     public float timer = 5f;
+    private bool grounded;
 
     private readonly float _gravity = -9.81f;
 
     private void Awake()
     {
+        rb = GetComponent<Rigidbody>();
         _particleSystems = GetComponentsInChildren<ParticleSystem>();
         _controller = GetComponent<CharacterController>();
         _playerInterface = GetComponent<PlayerInterface>();
@@ -63,6 +69,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        grounded = Physics.Raycast(transform.position, Vector3.down, hightGroundCheck, maskGround);
         if (!_playerInterface._isPause && !_playerInterface._isWinOrFail)
         {
             if (Input.GetKey(KeyCode.Alpha3) && _hp < 100 && numMedic > 0)
@@ -134,23 +141,24 @@ public class Player : MonoBehaviour
                 //_audioSource.Play();
                 StartCoroutine(Reload());
             }
-
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && grounded)
             {
-                StartCoroutine(Jamp(200));
+                Jamp(forceJamp);
             }
         }
     }
 
     private void FixedUpdate()
     {
+        grounded = Physics.Raycast(transform.position, Vector3.down, hightGroundCheck, maskGround);
         if (!_playerInterface._isPause && !_playerInterface._isWinOrFail)
         {
+            /*
             if (_controller.isGrounded && _velocety < 0)
             {
                 _velocety = -2;
             }
-
+            */
             if ((_moveDirection.x != 0 || _moveDirection.z != 0) && Input.GetKey(KeyCode.LeftShift))
             {
                 Move(_moveDirection, speedRun);
@@ -159,23 +167,33 @@ public class Player : MonoBehaviour
             {
                 Move(_moveDirection, speed);
             }
+            else if (_moveDirection.x == 0 && _moveDirection.z == 0 && grounded)
+            {
+                rb.velocity = Vector3.zero;
+            }
 
-            DoGravity();
+            //DoGravity();
         }
     }
 
-    IEnumerator Jamp(float _force)
+    private void Jamp(float _force)
     {
-        for (int i = 0; i < 50; i++)
-        {
-            _controller.Move(transform.up * (_force / 50) * Time.fixedDeltaTime);
-            yield return new WaitForEndOfFrame();
-        }
+        rb.AddForce(transform.up * _force, ForceMode.Impulse);
     }
 
     private void Move(Vector3 _direction, float _speedObj)
     {
-        _controller.Move(((transform.right * (_direction.z * _speedObj)) + (transform.forward * (_direction.x * _speedObj))) * Time.fixedDeltaTime);
+        //_controller.Move(((transform.right * (_direction.z * _speedObj)) + (transform.forward * (_direction.x * _speedObj))) * Time.fixedDeltaTime);      
+        Vector3 vec = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+
+        if(vec.magnitude > 10)
+        {
+            
+        }
+        else
+        {
+            rb.AddForce(((transform.right * (_direction.z * _speedObj)) + (transform.forward * (_direction.x * _speedObj))) * 10);
+        }
     }
 
     private void DoGravity()

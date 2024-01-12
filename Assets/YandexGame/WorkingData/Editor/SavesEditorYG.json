@@ -1,11 +1,11 @@
 {
-    "idSave": 24,
+    "idSave": 48,
     "isFirstSession": false,
     "language": "ru",
     "promptDone": false,
-    "volMusic": 100.0,
+    "volMusic": 1.0,
     "sens": 800.0,
-    "money": 800,
+    "money": 975,
     "inv": [
         1,
         3

@@ -24,7 +24,7 @@ public class MaineMenu : MonoBehaviour
 
     private void Awake()
     {
-        StaticVal.language = YandexGame.lang;
+        StaticVal.language = YandexGame.EnvironmentData.language;
         StaticVal.volMusic = YandexGame.savesData.volMusic;
         StaticVal.money = YandexGame.savesData.money;
         StaticVal.sens = YandexGame.savesData.sens;
@@ -33,6 +33,9 @@ public class MaineMenu : MonoBehaviour
         Tras();
 
         AudioListener.volume = StaticVal.volMusic;
+
+        music.value = YandexGame.savesData.volMusic;
+        sensMouse.value = YandexGame.savesData.sens;
     }
 
     private void Update()

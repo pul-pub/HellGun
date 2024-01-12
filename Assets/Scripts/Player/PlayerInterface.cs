@@ -123,7 +123,7 @@ public class PlayerInterface : MonoBehaviour
             timer -= Time.deltaTime;
         }
 
-        if (StaticVal.scoreWithPoint >= 100 || StaticVal.numEnemy <= 0)
+        if ((StaticVal.scoreWithPoint >= 100 || StaticVal.numEnemy <= 0) && !_isWinOrFail)
         {
             if (StaticVal.scoreWithPoint >= 120)
             {
@@ -131,7 +131,7 @@ public class PlayerInterface : MonoBehaviour
             }
             WinGame();
         }
-        else if (_player.Health <= 0f)
+        else if (_player.Health <= 0f && !_isWinOrFail)
         {
             FailGame();
         }
@@ -242,12 +242,15 @@ public class PlayerInterface : MonoBehaviour
     {
         textScores.text = StaticVal.moneyForBattle.ToString() + " $";
         textForWinOrFail.text = translator.Translating("win");
+        _isWinOrFail = true;
         StartCoroutine(WinScreenOpen());
     }
 
     public void FailGame()
     {
-        textScores.text = (StaticVal.moneyForBattle / 2).ToString() + " $";
+        StaticVal.moneyForBattle = StaticVal.moneyForBattle / 2;
+        textScores.text = StaticVal.moneyForBattle.ToString() + " $";
+        _isWinOrFail = true;
         textForWinOrFail.text = translator.Translating("fail");
         StartCoroutine(WinScreenOpen());
     }
@@ -260,9 +263,9 @@ public class PlayerInterface : MonoBehaviour
         Time.timeScale = 0.0f;
 
         screenWin.gameObject.SetActive(true);
-        for (int i = 0; i < 256; i += 2)
+        for (int i = 0; i < 100; i++)
         {
-            screenWin.color += new Color(0, 0, 0, 0.001f);
+            screenWin.color += new Color(0, 0, 0, 0.02f);
             yield return new WaitForSeconds(0.05f);
         }
     }
@@ -334,8 +337,11 @@ public class PlayerInterface : MonoBehaviour
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        StaticVal.money = StaticVal.moneyForBattle;
+        StaticVal.money += StaticVal.moneyForBattle;
         StaticVal.moneyForBattle = 0;
+        screenPause.SetActive(false);
+        screenWin.color -= new Color(0, 0, 0, 1);
+        screenWin.gameObject.SetActive(false);
         YandexGame.savesData.money = StaticVal.money;
         YandexGame.SaveProgress();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1, LoadSceneMode.Single);
