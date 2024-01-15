@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
     private Camera _camera;
     private CameraContoller _cameraContoller;
     private ParticleSystem[] _particleSystems;
-    //private AudioSource _audioSource;
+    private AudioSource _audioSource;
     private Animator _anim;
     private float _velocety;
     private Vector3 _moveDirection;
@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _playerInterface = GetComponent<PlayerInterface>();
         _anim = hands.GetComponent<Animator>();
-       // _audioSource = GetComponent<AudioSource>();
+        _audioSource = GetComponent<AudioSource>();
         _camera = Camera.main;
         _cameraContoller = GetComponentInChildren<CameraContoller>();
         Cursor.lockState = CursorLockMode.Locked;
@@ -112,7 +112,7 @@ public class Player : MonoBehaviour
             {
                 if (Input.GetMouseButton(0) && _flagGun == true &&
                     StaticVal.inv[_numGun - 1] >= 0 && StaticVal.gun[StaticVal.inv[_numGun - 1]].currentAmmos >= 1 && !_playerInterface._isPause &&
-                    !_playerInterface._isWinOrFail)
+                    !_playerInterface._isWinOrFail && !_isReload)
                 {
                     _particleSystems[Random.Range(0, _particleSystems.Length)].Play();
                     if (StaticVal.gun[StaticVal.inv[_numGun - 1]].Shoot(bullet, parent, pointStartRaycast, pointStartRaycast2, TypeBullet.Enemy))
@@ -121,8 +121,8 @@ public class Player : MonoBehaviour
                     }
 
                     _cameraContoller.Recoil(StaticVal.gun[StaticVal.inv[_numGun - 1]].angelVertical);
-                    //_audioSource.clip = shootClip;
-                    //_audioSource.Play();
+                    _audioSource.clip = shootClip;
+                    _audioSource.Play();
                     _timeBtwShot = StaticVal.gun[StaticVal.inv[_numGun - 1]].startTimeBtwShot;
                 }
             }
@@ -137,8 +137,8 @@ public class Player : MonoBehaviour
             {
                 _isReload = true;
                 _anim.SetTrigger("Reload");
-                //_audioSource.clip = reloadClip;
-                //_audioSource.Play();
+                _audioSource.clip = reloadClip;
+                _audioSource.Play();
                 StartCoroutine(Reload());
             }
             if (Input.GetKeyDown(KeyCode.Space) && grounded)
@@ -166,10 +166,6 @@ public class Player : MonoBehaviour
             else if (_moveDirection.x != 0 || _moveDirection.z != 0)
             {
                 Move(_moveDirection, speed);
-            }
-            else if (_moveDirection.x == 0 && _moveDirection.z == 0 && grounded)
-            {
-                rb.velocity = Vector3.zero;
             }
 
             //DoGravity();

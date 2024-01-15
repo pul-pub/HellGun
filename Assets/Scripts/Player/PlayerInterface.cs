@@ -33,7 +33,7 @@ public class PlayerInterface : MonoBehaviour
     [SerializeField] private TextMeshProUGUI contline;
     [SerializeField] private TextMeshProUGUI exit;
     [SerializeField] private TextMeshProUGUI exitWin;
-    [SerializeField] private Image screenWin;
+    [SerializeField] private GameObject screenWin;
     [SerializeField] private TextMeshProUGUI textForWinOrFail;
     [SerializeField] private TextMeshProUGUI textPause;
     [SerializeField] private TextMeshProUGUI textScores;
@@ -242,19 +242,31 @@ public class PlayerInterface : MonoBehaviour
     {
         textScores.text = StaticVal.moneyForBattle.ToString() + " $";
         textForWinOrFail.text = translator.Translating("win");
+
         _isWinOrFail = true;
-        StartCoroutine(WinScreenOpen());
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        Time.timeScale = 0.0f;
+
+        screenWin.SetActive(true);
+        //StartCoroutine(WinScreenOpen());
     }
 
     public void FailGame()
     {
         StaticVal.moneyForBattle = StaticVal.moneyForBattle / 2;
         textScores.text = StaticVal.moneyForBattle.ToString() + " $";
-        _isWinOrFail = true;
         textForWinOrFail.text = translator.Translating("fail");
-        StartCoroutine(WinScreenOpen());
-    }
 
+        _isWinOrFail = true;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        Time.timeScale = 0.0f;
+
+        screenWin.SetActive(true);
+        //StartCoroutine(WinScreenOpen());
+    }
+    /*
     IEnumerator WinScreenOpen()
     {
         _isWinOrFail = true;
@@ -269,7 +281,7 @@ public class PlayerInterface : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
     }
-
+    */
     public void Resume()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -340,8 +352,8 @@ public class PlayerInterface : MonoBehaviour
         StaticVal.money += StaticVal.moneyForBattle;
         StaticVal.moneyForBattle = 0;
         screenPause.SetActive(false);
-        screenWin.color -= new Color(0, 0, 0, 1);
-        screenWin.gameObject.SetActive(false);
+        //screenWin.color -= new Color(0, 0, 0, 1);
+        screenWin.SetActive(false);
         YandexGame.savesData.money = StaticVal.money;
         YandexGame.SaveProgress();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1, LoadSceneMode.Single);
