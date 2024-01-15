@@ -22,9 +22,17 @@ public class Bullet : MonoBehaviour
 
     private void Update()
     {
-        bool l = Physics.CheckBox(transform.position, new Vector3(0.075f, 0.075f, 1f), transform.rotation, LayerMask.GetMask("Ray", "Player", "Enemy"));
         timer -= Time.deltaTime;
-        if (timer < 0 || l)
+        if (timer < 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        bool l = Physics.CheckBox(transform.position, new Vector3(0.075f, 0.075f, 1f), transform.rotation, LayerMask.GetMask("Ray", "Player", "Enemy"));
+        if (l)
         {
             Destroy(gameObject);
         }
@@ -34,6 +42,11 @@ public class Bullet : MonoBehaviour
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawCube(transform.position, new Vector3(0.075f, 0.075f, 1f));
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Destroy(gameObject);
     }
 
     /*

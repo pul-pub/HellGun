@@ -22,6 +22,9 @@ public class MaineMenu : MonoBehaviour
     public GameObject IsShoped33;
     public GameObject IsShoped44;
 
+    private void OnEnable() => YandexGame.RewardVideoEvent += Rewarded;
+    private void OnDisable() => YandexGame.RewardVideoEvent -= Rewarded;
+
     private void Awake()
     {
         StaticVal.language = YandexGame.EnvironmentData.language;
@@ -130,10 +133,9 @@ public class MaineMenu : MonoBehaviour
         }
     }
 
-    public void OnRewarded()
+    public void Rewarded(int id)
     {
         StaticVal.money += 725;
-
 
         YandexGame.savesData.money = StaticVal.money;
         YandexGame.SaveProgress();
